@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "Checkgalpy-client",
+    "slug": "Checkgalpy-client"
+  }
+}
