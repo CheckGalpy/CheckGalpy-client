@@ -45,7 +45,8 @@
     "*.{js,jsx,html}": [
       "prettier --write .",
       "eslint --fix ."
-    ]
+    ],
+    "!SignIn.js": []
   },
   "resolutions": {
     "metro": "^0.73.7",
