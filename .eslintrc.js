@@ -22,6 +22,7 @@ module.exports = {
     "require-jsdoc": "off",
     "react/react-in-jsx-scope": "off",
     "no-unused-vars": "error",
+    "import/order": "off",
   },
   settings: {
     react: {
