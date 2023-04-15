@@ -11,10 +11,13 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
+    "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
     "@reduxjs/toolkit": "^1.9.3",
     "expo": "^47.0.14",
     "expo-auth-session": "~3.8.0",
+    "expo-camera": "~13.1.0",
+    "expo-image-picker": "~14.0.2",
     "expo-random": "~13.0.0",
     "expo-router": "^1.5.3",
     "expo-web-browser": "~12.0.0",
@@ -25,6 +28,7 @@
     "react-native-dotenv": "^3.4.8",
     "react-native-reanimated": "2.12",
     "react-native-web": "^0.18.12",
+    "react-navigation": "^4.4.4",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1"
   },
