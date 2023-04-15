@@ -2,10 +2,10 @@ import { View, Text } from "react-native";
 
 import styles from "./styles";
 
-export default function Camera() {
+export default function Tutorial() {
   return (
     <View style={styles.container}>
-      <Text>Camera</Text>
+      <Text>Tutorial</Text>
     </View>
   );
 }

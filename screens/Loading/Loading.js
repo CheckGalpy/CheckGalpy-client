@@ -1,5 +1,5 @@
-import LottieView from "lottie-react-native";
 import { View } from "react-native";
+import LottieView from "lottie-react-native";
 
 import styles from "./styles";
 

@@ -3,16 +3,16 @@ import {
   REACT_APP_ANDROID_CLIENT_ID,
   REACT_APP_IOS_CLIENT_ID,
 } from "@env";
-import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
 
-import styles from "./styles";
+import { setUserInfo } from "../../redux/userSlice";
 import logo from "../../assets/images/logo.png";
 import splash from "../../assets/images/sign-in-background.png";
-import { setUserInfo } from "../../redux/userSlice";
+import styles from "./styles";
 
 WebBrowser.maybeCompleteAuthSession();
 
