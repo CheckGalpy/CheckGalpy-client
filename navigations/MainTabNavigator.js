@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import CameraHeader from "../headers/CaneraHeader/CameraHeader";
+import CameraHeader from "../headers/CameraHeader/CameraHeader";
 import MainHeader from "../headers/MainHeader/MainHeader";
 import Bookmark from "../screens/Bookmark/Bookmark";
 import Dashboard from "../screens/Dashboard/Dashboard";

@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import MainTabNavigator from "./MainTabNavigator";
-import CameraHeader from "../headers/CaneraHeader/CameraHeader";
+import CameraHeader from "../headers/CameraHeader/CameraHeader";
 import ScanEdit from "../screens/ScanEdit/ScanEdit";
 import Setting from "../screens/Setting/Setting";
 import SignIn from "../screens/SignIn/SignIn";
