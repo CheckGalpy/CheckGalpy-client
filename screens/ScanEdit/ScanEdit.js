@@ -15,7 +15,7 @@ export default function ScanEdit() {
 
   const pictureInfo = useSelector((state) => state.picture.pictureInfo);
 
-  const handleOCR = async () => {
+  const handleTextExtraction = async () => {
     const body = {
       requests: [
         {
@@ -36,12 +36,10 @@ export default function ScanEdit() {
         body: JSON.stringify(body),
       },
     );
+    const data = await response.json();
+    const textExtracted = data.responses[0].textAnnotations[0].description;
 
-    const parsed = await response.json();
-
-    const OCRed = parsed.responses[0].textAnnotations[0].description;
-
-    dispatch(setTextInfo(OCRed));
+    dispatch(setTextInfo(textExtracted));
     navigate("Bookmark");
   };
 
@@ -74,7 +72,7 @@ export default function ScanEdit() {
             />
           </View>
           <View style={styles.controlAreaRight}>
-            <TouchableOpacity onPress={handleOCR}>
+            <TouchableOpacity onPress={handleTextExtraction}>
               <Image
                 source={confirmScan}
                 style={styles.confirmButton}

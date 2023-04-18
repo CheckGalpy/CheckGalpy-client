@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import styles from "./styles";
 
 export default function Dashboard() {
-  const userInfo = useSelector((state) => state.user.userInfo);
+  const userId = useSelector((state) => state.user.userId);
 
   return (
     <View style={styles.container}>
-      <Text>{JSON.stringify(userInfo)}</Text>
+      <Text>{userId}</Text>
     </View>
   );
 }

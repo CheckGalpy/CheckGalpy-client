@@ -5,16 +5,19 @@ import MainTabNavigator from "./MainTabNavigator";
 import CameraHeader from "../headers/CameraHeader/CameraHeader";
 import ScanEdit from "../screens/ScanEdit/ScanEdit";
 import Setting from "../screens/Setting/Setting";
-import SignIn from "../screens/SignIn/SignIn";
+import Login from "../screens/Login/Login";
 import Album from "../screens/Album/Album";
+import useTokenVerification from "../hooks/useTokenVerification";
 
 export default function AppStackNavigator() {
-  const user = useSelector((state) => state.user.userInfo);
   const Stack = createStackNavigator();
+  const authStatus = useSelector((state) => state.authStatus.authStatus);
+
+  useTokenVerification();
 
   return (
     <Stack.Navigator>
-      {user ? (
+      {authStatus === "authorized" ? (
         <>
           <Stack.Screen
             name="MainTabNavigator"
@@ -33,8 +36,8 @@ export default function AppStackNavigator() {
         </>
       ) : (
         <Stack.Screen
-          name="SignIn"
-          component={SignIn}
+          name="Login"
+          component={Login}
           options={{ headerShown: false }}
         />
       )}
