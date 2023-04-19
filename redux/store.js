@@ -4,6 +4,7 @@ import authSlice from "./authSlice";
 import userSlice from "./userSlice";
 import pictureSlice from "./pictureSlice";
 import textSlice from "./textSlice";
+import currentBookmarkSlice from "./currentBookmarkSlice";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     user: userSlice,
     picture: pictureSlice,
     text: textSlice,
+    currentBookmark: currentBookmarkSlice,
   },
 });
 
