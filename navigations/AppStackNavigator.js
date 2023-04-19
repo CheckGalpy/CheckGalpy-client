@@ -1,13 +1,14 @@
 import { useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 
+import useTokenVerification from "../hooks/useTokenVerification";
 import MainTabNavigator from "./MainTabNavigator";
-import CameraHeader from "../headers/CameraHeader/CameraHeader";
-import ScanEdit from "../screens/ScanEdit/ScanEdit";
-import Setting from "../screens/Setting/Setting";
+import LogoHeader from "../components/headers/LogoHeader/LogoHeader";
 import Login from "../screens/Login/Login";
 import Album from "../screens/Album/Album";
-import useTokenVerification from "../hooks/useTokenVerification";
+import ScanEdit from "../screens/ScanEdit/ScanEdit";
+import BookmarkDetail from "../screens/BookmarkDetail/BookmarkDetail";
+import Setting from "../screens/Setting/Setting";
 
 export default function AppStackNavigator() {
   const Stack = createStackNavigator();
@@ -30,7 +31,14 @@ export default function AppStackNavigator() {
             name="ScanEdit"
             component={ScanEdit}
             options={{
-              header: () => <CameraHeader />,
+              header: () => <LogoHeader />,
+            }}
+          />
+          <Stack.Screen
+            name="BookmarkDetail"
+            component={BookmarkDetail}
+            options={{
+              header: () => <LogoHeader />,
             }}
           />
         </>

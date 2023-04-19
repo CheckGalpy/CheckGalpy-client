@@ -1,11 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import CameraHeader from "../headers/CameraHeader/CameraHeader";
-import MainHeader from "../headers/MainHeader/MainHeader";
-import Bookmark from "../screens/Bookmark/Bookmark";
+import LogoHeader from "../components/headers/LogoHeader/LogoHeader";
+import TitleHeader from "../components/headers/TitleHeader/TitleHeader";
 import Dashboard from "../screens/Dashboard/Dashboard";
-import Following from "../screens/Following/Following";
+import Bookmark from "../screens/Bookmark/Bookmark";
 import Scan from "../screens/Scan/Scan";
+import Following from "../screens/Following/Following";
 
 export default function MainTabNavigator() {
   const MainTab = createBottomTabNavigator();
@@ -13,27 +13,27 @@ export default function MainTabNavigator() {
   return (
     <MainTab.Navigator>
       <MainTab.Screen
+        name="Bookmark"
+        component={Bookmark}
+        options={{ header: () => <TitleHeader screenTitle="책갈피" /> }}
+      />
+      <MainTab.Screen
         name="Dashboard"
         component={Dashboard}
         options={{ headerShown: false }}
       />
       <MainTab.Screen
-        name="Bookmark"
-        component={Bookmark}
-        options={{ header: () => <MainHeader screenTitle="책갈피" /> }}
-      />
-      <MainTab.Screen
         name="Scan"
         component={Scan}
         options={{
-          header: () => <CameraHeader />,
+          header: () => <LogoHeader />,
           tabBarStyle: { display: "none" },
         }}
       />
       <MainTab.Screen
         name="Following"
         component={Following}
-        options={{ header: () => <MainHeader screenTitle="팔로잉" /> }}
+        options={{ header: () => <TitleHeader screenTitle="팔로잉" /> }}
       />
     </MainTab.Navigator>
   );

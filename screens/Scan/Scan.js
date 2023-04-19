@@ -1,22 +1,21 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { View, TouchableOpacity, Text, Image } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Camera } from "expo-camera";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import { setPictureInfo } from "../../redux/pictureSlice";
 import styles from "./styles";
 
 export default function Scan() {
-  const albumThumbnail = require("../../assets/images/album-thumbnail.png");
-
-  const [isCameraOn, setItCameraOn] = useState(true);
-  const dispatch = useDispatch();
   const { navigate } = useNavigation();
+  const dispatch = useDispatch();
+
   const cameraRef = useRef(null);
+  const [isCameraOn, setItCameraOn] = useState(true);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setItCameraOn(true);
 
       return () => {
@@ -45,7 +44,7 @@ export default function Scan() {
         console.warn(error);
       }
     } else {
-      console.warn("cameraRef is not active.");
+      console.warn("cameraRef이 활성화 되지 않았습니다");
     }
   };
 
@@ -63,7 +62,7 @@ export default function Scan() {
           <View style={styles.controlAreaLeft}>
             <TouchableOpacity onPress={() => navigate("Album")}>
               <Image
-                source={albumThumbnail}
+                source={require("../../assets/images/album-thumbnail.png")}
                 style={styles.albumThumbnail}
                 resizeMode="contain"
               />

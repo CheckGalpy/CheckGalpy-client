@@ -4,14 +4,11 @@ import LottieView from "lottie-react-native";
 import styles from "./styles";
 
 export default function Loading() {
+  const animationSource = require("../../assets/animations/bookAnimation.json");
+
   return (
     <View style={styles.lottieContainer}>
-      <LottieView
-        source={require("../../assets/animations/bookAnimation.json")}
-        autoPlay
-        loop
-        speed={1.5}
-      />
+      <LottieView source={animationSource} autoPlay loop speed={1.5} />
     </View>
   );
 }

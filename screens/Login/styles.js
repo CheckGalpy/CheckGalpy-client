@@ -9,9 +9,9 @@ const styles = StyleSheet.create({
   backgroundContainer: {
     position: "absolute",
     top: 0,
-    left: 0,
     right: 0,
     bottom: 0,
+    left: 0,
     alignItems: "center",
   },
   background: {
@@ -22,26 +22,26 @@ const styles = StyleSheet.create({
   logoContainer: {
     position: "absolute",
     top: 50,
-    left: 0,
     right: 0,
+    left: 0,
     alignItems: "center",
   },
   logo: {
-    resizeMode: "contain",
     width: "50%",
+    resizeMode: "contain",
   },
   buttonContainer: {
     position: "absolute",
-    left: 0,
     right: 0,
     bottom: 90,
+    left: 0,
     alignItems: "center",
   },
   button: {
     backgroundColor: PRIMARY_YELLOW,
-    borderRadius: 30,
     paddingVertical: 15,
     paddingHorizontal: 40,
+    borderRadius: 30,
   },
 });
 

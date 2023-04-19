@@ -1,18 +1,19 @@
-import { REACT_APP_GOOGLE_CLOUD_VISION_API_KRY } from "@env";
 import { useSelector, useDispatch } from "react-redux";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import {
+  REACT_APP_GOOGLE_CLOUD_VISION_API_KRY,
+  REACT_APP_API_URI as API_URI,
+} from "@env";
 
-import { setTextInfo } from "../../redux/textSlice";
+import { setBookmarkId } from "../../redux/currentBookmarkSlice";
 import styles from "./styles";
 
 export default function ScanEdit() {
-  const albumThumbnail = require("../../assets/images/album-thumbnail.png");
-  const confirmScan = require("../../assets/images/button-confirm.png");
-
-  const dispatch = useDispatch();
   const { navigate } = useNavigation();
 
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.user.userId);
   const pictureInfo = useSelector((state) => state.picture.pictureInfo);
 
   const handleTextExtraction = async () => {
@@ -38,9 +39,42 @@ export default function ScanEdit() {
     );
     const data = await response.json();
     const textExtracted = data.responses[0].textAnnotations[0].description;
+    const result = await saveBookmark(textExtracted);
 
-    dispatch(setTextInfo(textExtracted));
-    navigate("Bookmark");
+    if (result === 201) {
+      navigate("BookmarkDetail");
+    } else {
+      Alert.alert("책갈피 생성에 실패하였습니다");
+      navigate("Scan");
+    }
+  };
+
+  const saveBookmark = async (textExtracted) => {
+    try {
+      const createdAt = new Date();
+      const bookmarkInfo = {
+        creatorId: userId,
+        content: textExtracted,
+        createdAt,
+        hashtags: [],
+        book: {},
+      };
+
+      const response = await fetch(`${API_URI}/api/bookmark/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookmarkInfo),
+      });
+
+      const bookmarkId = await response.json();
+      dispatch(setBookmarkId(bookmarkId));
+
+      return response.status;
+    } catch (error) {
+      console.warn(error);
+    }
   };
 
   const handleRescan = () => {
@@ -58,7 +92,7 @@ export default function ScanEdit() {
           <View style={styles.controlAreaLeft}>
             <TouchableOpacity onPress={() => navigate("Album")}>
               <Image
-                source={albumThumbnail}
+                source={require("../../assets/images/album-thumbnail.png")}
                 style={styles.albumThumbnail}
                 resizeMode="contain"
               />
@@ -74,7 +108,7 @@ export default function ScanEdit() {
           <View style={styles.controlAreaRight}>
             <TouchableOpacity onPress={handleTextExtraction}>
               <Image
-                source={confirmScan}
+                source={require("../../assets/images/button-confirm.png")}
                 style={styles.confirmButton}
                 resizeMode="contain"
               />

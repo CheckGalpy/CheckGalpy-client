@@ -34,20 +34,20 @@ const styles = StyleSheet.create({
   settingButton: {
     width: 25,
     height: 25,
-    marginBottom: 10,
     marginRight: 15,
+    marginBottom: 10,
   },
   modalContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
     paddingHorizontal: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
     padding: 20,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    backgroundColor: "white",
   },
 });
 

@@ -1,8 +1,13 @@
+import { REACT_APP_API_URI as API_URI } from "@env";
 import * as SecureStore from "expo-secure-store";
 
-export default async function requestToken(dispatch, setAuthStatus, userInfo) {
+export default async function requestTokenAndStore(
+  dispatch,
+  setAuthStatus,
+  userInfo,
+) {
   try {
-    const response = await fetch("http://192.168.0.15:8000/api/auth/signin", {
+    const response = await fetch(`${API_URI}/api/auth/signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

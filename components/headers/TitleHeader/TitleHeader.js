@@ -4,18 +4,15 @@ import PropTypes from "prop-types";
 
 import styles from "./styles";
 
-export default function MainHeader({ screenTitle }) {
+export default function TitleHeader({ screenTitle }) {
   const navigation = useNavigation();
-
-  const backButtonImg = require("../../assets/images/button-back.png");
-  const settingButtonImg = require("../../assets/images/button-setting.png");
 
   return (
     <View style={styles.container}>
       <View style={styles.containerLeft}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            source={backButtonImg}
+            source={require("../../../assets/images/button-back.png")}
             style={styles.backButton}
             resizeMode="contain"
           />
@@ -27,7 +24,7 @@ export default function MainHeader({ screenTitle }) {
       <View style={styles.containerRight}>
         <TouchableOpacity onPress={() => navigation.navigate("Setting")}>
           <Image
-            source={settingButtonImg}
+            source={require("../../../assets/images/button-setting.png")}
             style={styles.settingButton}
             resizeMode="contain"
           />
@@ -37,6 +34,6 @@ export default function MainHeader({ screenTitle }) {
   );
 }
 
-MainHeader.propTypes = {
+TitleHeader.propTypes = {
   screenTitle: PropTypes.string.isRequired,
 };
