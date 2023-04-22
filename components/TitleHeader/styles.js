@@ -12,18 +12,18 @@ const styles = StyleSheet.create({
     alignItems: "baseline",
   },
   containerCenter: {
-    flex: 3,
+    flex: 5,
     justifyContent: "flex-end",
-    alignItems: "center",
+    alignItems: "baseline",
   },
   containerRight: {
-    flex: 1,
+    flex: 2,
     justifyContent: "flex-end",
     alignItems: "flex-end",
   },
   backButton: {
     width: 20,
-    height: 20,
+    height: 15,
     marginBottom: 15,
     marginLeft: 10,
   },
@@ -31,11 +31,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 18,
   },
-  settingButton: {
-    width: 25,
-    height: 25,
+  addButton: {
+    width: 40,
+    height: 40,
     marginRight: 15,
-    marginBottom: 10,
   },
   modalContainer: {
     flex: 1,

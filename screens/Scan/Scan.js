@@ -62,7 +62,7 @@ export default function Scan() {
           <View style={styles.controlAreaLeft}>
             <TouchableOpacity onPress={() => navigate("Album")}>
               <Image
-                source={require("../../assets/images/album-thumbnail.png")}
+                source={require("../../assets/images/thumbnail-album.png")}
                 style={styles.albumThumbnail}
                 resizeMode="contain"
               />

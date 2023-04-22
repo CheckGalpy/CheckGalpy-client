@@ -3,12 +3,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import useTokenVerification from "../hooks/useTokenVerification";
 import MainTabNavigator from "./MainTabNavigator";
-import LogoHeader from "../components/headers/LogoHeader/LogoHeader";
+import LogoHeader from "../components/LogoHeader/LogoHeader";
 import Login from "../screens/Login/Login";
 import Album from "../screens/Album/Album";
 import ScanEdit from "../screens/ScanEdit/ScanEdit";
 import BookmarkDetail from "../screens/BookmarkDetail/BookmarkDetail";
-import Setting from "../screens/Setting/Setting";
+import Scan from "../screens/Scan/Scan";
 
 export default function AppStackNavigator() {
   const Stack = createStackNavigator();
@@ -25,8 +25,20 @@ export default function AppStackNavigator() {
             component={MainTabNavigator}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Setting" component={Setting} />
-          <Stack.Screen name="Album" component={Album} />
+          <Stack.Screen
+            name="Album"
+            component={Album}
+            options={{
+              header: () => <LogoHeader />,
+            }}
+          />
+          <Stack.Screen
+            name="Scan"
+            component={Scan}
+            options={{
+              header: () => <LogoHeader />,
+            }}
+          />
           <Stack.Screen
             name="ScanEdit"
             component={ScanEdit}
