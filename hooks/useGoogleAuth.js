@@ -8,15 +8,16 @@ import {
   REACT_APP_IOS_CLIENT_ID as IOS_CLIENT_ID,
 } from "@env";
 
-import { setAuthStatus } from "../redux/authSlice";
-import requestToken from "../utils/requestTokenAndStore";
+import { setAuthStatus } from "../redux/authStatusSlice";
+import { setCurrentUserId } from "../redux/currentUserIdSlice";
+import requestTokenAndStore from "../utils/requestTokenAndStore";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function useGoogleAuth() {
   const dispatch = useDispatch();
 
-  const [accessToken, setAccessToken] = useState(null);
+  const [googleAccessToken, setGoogleAccessToken] = useState(null);
   const [googleUser, setGoogleUser] = useState(null);
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId: WEB_CLIENT_ID,
@@ -31,7 +32,7 @@ export default function useGoogleAuth() {
         const response = await fetch(
           "https://www.googleapis.com/userinfo/v2/me",
           {
-            headers: { Authorization: `Bearer ${accessToken}` },
+            headers: { Authorization: `Bearer ${googleAccessToken}` },
           },
         );
         const user = await response.json();
@@ -42,21 +43,20 @@ export default function useGoogleAuth() {
     };
 
     if (response?.type === "success") {
-      setAccessToken(response.authentication.accessToken);
+      setGoogleAccessToken(response.authentication.accessToken);
       getUserInfo();
     }
-  }, [request, response, accessToken]);
+  }, [request, response, googleAccessToken]);
 
   useEffect(() => {
-    if (googleUser?.id) {
+    if (googleUser?.email) {
       const userInfo = {
-        _id: googleUser.id,
         email: googleUser.email,
         givenName: googleUser.given_name,
         familyName: googleUser.family_name,
         avatarURL: googleUser.picture,
       };
-      requestToken(dispatch, setAuthStatus, userInfo);
+      requestTokenAndStore(dispatch, setAuthStatus, setCurrentUserId, userInfo);
     }
   }, [googleUser]);
 

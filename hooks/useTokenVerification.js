@@ -3,8 +3,8 @@ import { useDispatch } from "react-redux";
 import * as SecureStore from "expo-secure-store";
 import { REACT_APP_API_URI as API_URI } from "@env";
 
-import { setAuthStatus } from "../redux/authSlice";
-import { setUserId } from "../redux/userSlice";
+import { setAuthStatus } from "../redux/authStatusSlice";
+import { setCurrentUserId } from "../redux/currentUserIdSlice";
 
 export default function useTokenVerification() {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ export default function useTokenVerification() {
         await SecureStore.setItemAsync("token", JSON.stringify(data.token));
       }
 
-      dispatch(setUserId(data.userId));
+      dispatch(setCurrentUserId(data.userId));
       dispatch(setAuthStatus("authorized"));
     } catch (error) {
       console.warn(error);

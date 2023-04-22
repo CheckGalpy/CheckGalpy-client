@@ -12,7 +12,9 @@ import EditableHashtag from "../../components/EditableHashtag/EditableHashtag";
 export default function BookmarkDetail() {
   const { navigate } = useNavigation();
 
-  const bookmarkId = useSelector((state) => state.currentBookmark.bookmarkId);
+  const currentBookmarkId = useSelector(
+    (state) => state.currentBookmarkId.currentBookmarkId,
+  );
 
   const [dateString, setDateString] = useState(null);
   const [content, setContent] = useState("");
@@ -20,12 +22,15 @@ export default function BookmarkDetail() {
 
   useEffect(() => {
     const getBookmark = async () => {
-      const response = await fetch(`${API_URI}/api/bookmark/${bookmarkId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${API_URI}/api/bookmarks/${currentBookmarkId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       const bookmark = await response.json();
       const date = new Date(bookmark?.createdAt);
@@ -36,7 +41,7 @@ export default function BookmarkDetail() {
     };
 
     getBookmark();
-  }, [bookmarkId]);
+  }, [currentBookmarkId]);
 
   const handleContentChange = (newContent) => {
     setContent(newContent);
@@ -53,13 +58,16 @@ export default function BookmarkDetail() {
   };
 
   const handleUpdateBookmark = async () => {
-    const response = await fetch(`${API_URI}/api/bookmark/${bookmarkId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${API_URI}/api/bookmarks/${currentBookmarkId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content, hashtags }),
       },
-      body: JSON.stringify({ content, hashtags }),
-    });
+    );
 
     if (response.status === 200) {
       navigate("Bookmark");
@@ -98,7 +106,7 @@ export default function BookmarkDetail() {
           style={styles.submitButton}
           onPress={handleUpdateBookmark}
         >
-          <Text>책갈피 수정하기</Text>
+          <Text>책갈피 업데이트</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

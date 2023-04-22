@@ -4,7 +4,7 @@ import { View, TouchableOpacity, Text, Image } from "react-native";
 import { Camera } from "expo-camera";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
-import { setPictureInfo } from "../../redux/pictureSlice";
+import { setScannedImage } from "../../redux/scannedImageSlice";
 import styles from "./styles";
 
 export default function Scan() {
@@ -37,7 +37,7 @@ export default function Scan() {
           });
           await cameraRef.current.pausePreview();
 
-          dispatch(setPictureInfo(scanData.base64));
+          dispatch(setScannedImage(scanData.base64));
           navigate("ScanEdit");
         }
       } catch (error) {

@@ -4,6 +4,7 @@ import * as SecureStore from "expo-secure-store";
 export default async function requestTokenAndStore(
   dispatch,
   setAuthStatus,
+  setCurrentUserId,
   userInfo,
 ) {
   try {
@@ -16,9 +17,9 @@ export default async function requestTokenAndStore(
     });
 
     const data = await response.json();
-
     await SecureStore.setItemAsync("token", JSON.stringify(data));
 
+    dispatch(setCurrentUserId(data.userId));
     dispatch(setAuthStatus("authorized"));
   } catch (error) {
     console.warn(error);

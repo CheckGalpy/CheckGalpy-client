@@ -6,21 +6,23 @@ import {
   REACT_APP_API_URI as API_URI,
 } from "@env";
 
-import { setBookmarkId } from "../../redux/currentBookmarkSlice";
+import { setCurrentBookmarkId } from "../../redux/currentBookmarkIdSlice";
 import styles from "./styles";
 
 export default function ScanEdit() {
   const { navigate } = useNavigation();
 
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.user.userId);
-  const pictureInfo = useSelector((state) => state.picture.pictureInfo);
+  const currentUserId = useSelector(
+    (state) => state.currentUserId.currentUserId,
+  );
+  const scannedImage = useSelector((state) => state.scannedImage.scannedImage);
 
   const handleTextExtraction = async () => {
     const body = {
       requests: [
         {
-          image: { content: pictureInfo },
+          image: { content: scannedImage },
           features: [{ type: "DOCUMENT_TEXT_DETECTION", maxResults: 10 }],
         },
       ],
@@ -53,14 +55,14 @@ export default function ScanEdit() {
     try {
       const createdAt = new Date();
       const bookmarkInfo = {
-        creatorId: userId,
+        creatorId: currentUserId,
         content: textExtracted,
         createdAt,
         hashtags: [],
         book: {},
       };
 
-      const response = await fetch(`${API_URI}/api/bookmark/`, {
+      const response = await fetch(`${API_URI}/api/bookmarks/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +71,7 @@ export default function ScanEdit() {
       });
 
       const bookmarkId = await response.json();
-      dispatch(setBookmarkId(bookmarkId));
+      dispatch(setCurrentBookmarkId(bookmarkId));
 
       return response.status;
     } catch (error) {
@@ -85,14 +87,14 @@ export default function ScanEdit() {
     <>
       <View style={styles.container}>
         <Image
-          source={{ uri: `data:image/jpeg;base64,${pictureInfo}` }}
+          source={{ uri: `data:image/jpeg;base64,${scannedImage}` }}
           style={styles.pictureFrame}
         />
         <View style={styles.controlArea}>
           <View style={styles.controlAreaLeft}>
             <TouchableOpacity onPress={() => navigate("Album")}>
               <Image
-                source={require("../../assets/images/album-thumbnail.png")}
+                source={require("../../assets/images/thumbnail-album.png")}
                 style={styles.albumThumbnail}
                 resizeMode="contain"
               />

@@ -1,18 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import authSlice from "./authSlice";
-import userSlice from "./userSlice";
-import pictureSlice from "./pictureSlice";
-import textSlice from "./textSlice";
-import currentBookmarkSlice from "./currentBookmarkSlice";
+import authStatusSlice from "./authStatusSlice";
+import currentUserIdSlice from "./currentUserIdSlice";
+import scannedImageSlice from "./scannedImageSlice";
+import scannedTextSlice from "./scannedTextSlice";
+import currentBookmarkIdSlice from "./currentBookmarkIdSlice";
 
 const store = configureStore({
   reducer: {
-    authStatus: authSlice,
-    user: userSlice,
-    picture: pictureSlice,
-    text: textSlice,
-    currentBookmark: currentBookmarkSlice,
+    authStatus: authStatusSlice,
+    scannedImage: scannedImageSlice,
+    scannedText: scannedTextSlice,
+    currentUserId: currentUserIdSlice,
+    currentBookmarkId: currentBookmarkIdSlice,
   },
 });
 

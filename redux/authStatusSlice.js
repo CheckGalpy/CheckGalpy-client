@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const authSlice = createSlice({
+const authStatusSlice = createSlice({
   name: "authStatus",
   initialState: {
     authStatus: "pending",
@@ -12,5 +12,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setAuthStatus } = authSlice.actions;
-export default authSlice.reducer;
+export const { setAuthStatus } = authStatusSlice.actions;
+export default authStatusSlice.reducer;
