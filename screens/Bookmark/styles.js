@@ -52,26 +52,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "black",
   },
-  filterContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingRight: 10,
-  },
-  filterInnerContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  filterText: {
-    fontSize: 10,
-    fontcolor: "#e1e1e1",
-  },
-  filterIcon: {
-    width: 25,
-    height: 25,
-    marginLeft: 10,
-  },
+
   cardContainer: { paddingTop: 5, paddingBottom: 105 },
   card: {
     backgroundColor: "#fff",
@@ -116,7 +97,8 @@ const styles = StyleSheet.create({
   deleteButtonContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
+    height: 40,
   },
   deleteText: {
     color: "gray",
