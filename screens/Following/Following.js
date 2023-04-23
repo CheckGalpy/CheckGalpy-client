@@ -86,6 +86,35 @@ export default function Following() {
     scrollToTop();
   };
 
+  const handleFollowingButtonPress = async (targetUserId) => {
+    const isFollowing = followingStatusList[targetUserId];
+
+    try {
+      const url = `${API_URI}/api/follows/${
+        isFollowing ? "unfollow" : "follow"
+      }`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          followerId: currentUserId,
+          followeeId: targetUserId,
+        }),
+      });
+
+      if (response.status === 201 || response.status === 200) {
+        setFollowingStatusList({
+          ...followingStatusList,
+          [targetUserId]: !isFollowing,
+        });
+      }
+    } catch (error) {
+      console.error("팔로잉 정보 업데이트에 실패하였습니다: ", error);
+    }
+  };
+
   const scrollToTop = () => {
     scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
   };
@@ -133,6 +162,7 @@ export default function Following() {
                 <View style={styles.followingButtonContainer}>
                   <TouchableOpacity style={styles.followingingButtonContainer}>
                     <Image
+                      onPress={() => handleFollowingButtonPress(targetUser._id)}
                       source={
                         followingStatusList[targetUser._id]
                           ? require("../../assets/images/button-unfollow.png")
