@@ -4,11 +4,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import useTokenVerification from "../hooks/useTokenVerification";
 import MainTabNavigator from "./MainTabNavigator";
 import LogoHeader from "../components/LogoHeader/LogoHeader";
+import TitleHeader from "../components/TitleHeader/TitleHeader";
+
 import Login from "../screens/Login/Login";
 import Album from "../screens/Album/Album";
 import ScanEdit from "../screens/ScanEdit/ScanEdit";
 import BookmarkDetail from "../screens/BookmarkDetail/BookmarkDetail";
 import Scan from "../screens/Scan/Scan";
+import SearchFriend from "../screens/SearchFriend/SearchFriend";
 
 export default function AppStackNavigator() {
   const Stack = createStackNavigator();
@@ -51,6 +54,13 @@ export default function AppStackNavigator() {
             component={BookmarkDetail}
             options={{
               header: () => <LogoHeader />,
+            }}
+          />
+          <Stack.Screen
+            name="SearchFriend"
+            component={SearchFriend}
+            options={{
+              header: () => <TitleHeader screenInfo={{ title: "친구찾기" }} />,
             }}
           />
         </>

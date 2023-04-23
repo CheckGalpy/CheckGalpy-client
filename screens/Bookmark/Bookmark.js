@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { REACT_APP_API_URI as API_URI } from "@env";
 
@@ -105,21 +105,24 @@ export default function Bookmark() {
   };
 
   const handleDeleteBookmark = async () => {
-    const response = await fetch(
-      `${API_URI}/api/bookmarks/${bookmarkIdToDelete}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
+    try {
+      const response = await fetch(
+        `${API_URI}/api/bookmarks/${bookmarkIdToDelete}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      },
-    );
+      );
 
-    if (response.status !== 204) {
-      Alert.alert("책갈피 삭제에 실패하였습니다");
+      if (response.status === 204) {
+        setIsModalVisible(false);
+        getAllMyBookmarks();
+      }
+    } catch (error) {
+      console.error("책갈피 삭제에 실패하였습니다: ", error);
     }
-    setIsModalVisible(false);
-    getAllMyBookmarks();
   };
 
   const scrollToTop = () => {
@@ -136,9 +139,7 @@ export default function Bookmark() {
         />
       )}
       <SearchBox
-        searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
-        handleSearch={handleSearch}
         placeholder="찾는 책갈피가 있으신가요?"
       />
       <View style={styles.controllerContainer}>

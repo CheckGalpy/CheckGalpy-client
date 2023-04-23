@@ -30,8 +30,6 @@ export default function SearchBox({ setSearchKeyword, placeholder }) {
 }
 
 SearchBox.propTypes = {
-  searchKeyword: PropTypes.string.isRequired,
   setSearchKeyword: PropTypes.func.isRequired,
-  handleSearch: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
 };
