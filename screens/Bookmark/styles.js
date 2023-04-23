@@ -94,6 +94,14 @@ const styles = StyleSheet.create({
     backgroundColor: "ghostwhite",
     fontSize: 12,
   },
+  highlightedHashtag: {
+    marginRight: 10,
+    marginBottom: 5,
+    padding: 5,
+    borderRadius: 10,
+    backgroundColor: PRIMARY_YELLOW,
+    fontSize: 12,
+  },
   deleteButtonContainer: {
     flex: 1,
     justifyContent: "center",
