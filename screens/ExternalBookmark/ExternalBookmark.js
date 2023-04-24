@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector } from "react-redux";
-import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { REACT_APP_API_URI as API_URI } from "@env";
 
-import transformTimeStamp from "../../utils/formatTimeStamp";
 import styles from "./styles";
 
 import SearchBox from "../../components/SearchBox.js/SearchBox";
-import HighlightedContent from "../../components/HighlightedContent/HighlightedContent";
+import NonEditableCard from "../../components/NonEditableCard/NonEditableCard";
 
 export default function ExternalBookmark() {
   const accessedUser = useSelector((state) => state.accessedUser.accessedUser);
+  const currentUserId = useSelector(
+    (state) => state.currentUserId.currentUserId,
+  );
 
   const scrollViewRef = useRef();
 
@@ -57,7 +59,7 @@ export default function ExternalBookmark() {
       const collectStatus = {};
       for (const bookmark of sortedBookmarkList) {
         try {
-          const url = `${API_URI}/api/collects/${accessedUser.id}/${bookmark._id}/exists`;
+          const url = `${API_URI}/api/collects/${currentUserId}/${bookmark._id}/exists`;
           const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -69,8 +71,8 @@ export default function ExternalBookmark() {
         } catch (error) {
           console.warn(error);
         }
+        setCollectStatusList(collectStatus);
       }
-      setCollectStatusList(collectStatus);
 
       const cardExpansionStatus = sortedBookmarkList.reduce((acc, bookmark) => {
         acc[bookmark._id] = false;
@@ -106,7 +108,7 @@ export default function ExternalBookmark() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          collectorId: accessedUser.id,
+          collectorId: currentUserId,
           collectedBookmarkId: bookmarkId,
         }),
       });
@@ -144,78 +146,16 @@ export default function ExternalBookmark() {
         <ScrollView ref={scrollViewRef}>
           {(isSearching ? filteredBookmarkList : bookmarkList).map(
             (bookmark, index) => (
-              <View key={index} style={styles.card}>
-                <View style={styles.headerConatainer}>
-                  <View style={styles.titleContainer}>
-                    <Text style={styles.dateString}>
-                      {transformTimeStamp(new Date(bookmark.createdAt))}
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.collectButtonContainer}
-                    onPress={() => handleCollectButtonPress(bookmark._id)}
-                  >
-                    {!isSearching && (
-                      <Image
-                        source={
-                          collectStatusList[bookmark._id]
-                            ? require("../../assets/images/button-uncollect.png")
-                            : require("../../assets/images/button-collect.png")
-                        }
-                        style={styles.collectButton}
-                        resizeMode="contain"
-                      />
-                    )}
-                  </TouchableOpacity>
-                </View>
-                {isSearching ? (
-                  <HighlightedContent
-                    text={bookmark.content}
-                    keyword={searchKeyword}
-                  />
-                ) : (
-                  <Text
-                    style={styles.content}
-                    numberOfLines={
-                      cardExpasionStatusList[bookmark._id] ? undefined : 7
-                    }
-                  >
-                    {bookmark.content}
-                  </Text>
-                )}
-                <View style={styles.cardBottomConntainer}>
-                  <View style={styles.hashtagContainer}>
-                    {bookmark.hashtags?.map((tag, index) => (
-                      <Text
-                        style={
-                          tag !== searchKeyword
-                            ? styles.hashtag
-                            : styles.highlightedHashtag
-                        }
-                        key={index}
-                      >
-                        #{tag}
-                      </Text>
-                    ))}
-                  </View>
-                  <TouchableOpacity
-                    style={styles.expandButtonContainer}
-                    onPress={() => handleExpansionButtonPress(bookmark._id)}
-                  >
-                    {!isSearching && (
-                      <Image
-                        source={
-                          cardExpasionStatusList[bookmark._id]
-                            ? require("../../assets/images/button-shrink.png")
-                            : require("../../assets/images/button-expand.png")
-                        }
-                        style={styles.expandButton}
-                        resizeMode="contain"
-                      />
-                    )}
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <NonEditableCard
+                key={index}
+                bookmark={bookmark}
+                isSearching={isSearching}
+                searchKeyword={searchKeyword}
+                collectStatusList={collectStatusList}
+                cardExpasionStatusList={cardExpasionStatusList}
+                handleCollectButtonPress={handleCollectButtonPress}
+                handleExpansionButtonPress={handleExpansionButtonPress}
+              />
             ),
           )}
         </ScrollView>

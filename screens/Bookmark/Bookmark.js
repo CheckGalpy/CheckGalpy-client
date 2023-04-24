@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { REACT_APP_API_URI as API_URI } from "@env";
 
 import { setCurrentBookmarkId } from "../../redux/currentBookmarkIdSlice";
-import transformTimeStamp from "../../utils/formatTimeStamp";
 import styles from "./styles";
 
+import ListSelectionTab from "../../components/ListSelectionTab/ListSelectionTab";
 import SearchBox from "../../components/SearchBox.js/SearchBox";
 import SortController from "../../components/SortController/SortController";
 import ConfirmModal from "../../components/ConfirmModal/ConfirmModal";
-import HighlightedContent from "../../components/HighlightedContent/HighlightedContent";
+import EditableCard from "../../components/EditableCard/EditableCard";
+import NonEditableCard from "../../components/NonEditableCard/NonEditableCard";
 
 export default function Bookmark() {
   const { navigate } = useNavigation();
@@ -25,13 +26,15 @@ export default function Bookmark() {
 
   const [refresh, setRefresh] = useState(false);
   const [bookmarkList, setBookmarkList] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [filteredBookmarkList, setFilteredBookmarkList] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [activeTab, setActiveTab] = useState("MY");
   const [sortOrder, setSortOrder] = useState("최신순");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [bookmarkIdToDelete, setBookmarkIdToDelete] = useState(null);
+  const [collectStatusList, setCollectStatusList] = useState({});
+  const [cardExpasionStatusList, setCardExpasionStatusList] = useState({});
 
   useEffect(() => {
     getAllMyBookmarks();
@@ -56,18 +59,50 @@ export default function Bookmark() {
   );
 
   const getAllMyBookmarks = async () => {
-    try {
-      const url = `${API_URI}/api/bookmarks/creator?creatorId=${currentUserId}`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const bookmarkList = await response.json();
-      setBookmarkList(bookmarkList.reverse());
-    } catch (error) {
-      console.warn(error);
+    if (activeTab === "MY") {
+      try {
+        const url = `${API_URI}/api/bookmarks/creator?creatorId=${currentUserId}`;
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const bookmarkList = await response.json();
+        setBookmarkList(bookmarkList.reverse());
+      } catch (error) {
+        console.warn(error);
+      }
+    } else if (activeTab === "collected") {
+      try {
+        const url = `${API_URI}/api/collects/${currentUserId}/collected`;
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const bookmarkList = await response.json();
+        const sortedBookmarkList = bookmarkList.reverse();
+        setBookmarkList(sortedBookmarkList);
+
+        const collectStatus = sortedBookmarkList.reduce((acc, bookmark) => {
+          acc[bookmark._id] = true;
+          return acc;
+        }, {});
+        setCollectStatusList(collectStatus);
+
+        const cardExpansionStatus = sortedBookmarkList.reduce(
+          (acc, bookmark) => {
+            acc[bookmark._id] = false;
+            return acc;
+          },
+          {},
+        );
+        setCardExpasionStatusList(cardExpansionStatus);
+      } catch (error) {
+        console.warn(error);
+      }
     }
   };
 
@@ -84,6 +119,8 @@ export default function Bookmark() {
 
   const handleTabSwitch = (tab) => {
     setActiveTab(tab);
+    setSearchKeyword("");
+    setIsSearching(false);
     scrollToTop();
   };
 
@@ -125,6 +162,42 @@ export default function Bookmark() {
     }
   };
 
+  const handleCollectButtonPress = async (bookmarkId) => {
+    try {
+      const isCollected = collectStatusList[bookmarkId];
+      const url = `${API_URI}/api/collects/${
+        isCollected ? "discard" : "collect"
+      }`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          collectorId: currentUserId,
+          collectedBookmarkId: bookmarkId,
+        }),
+      });
+
+      if (response.status === 201 || response.status === 200) {
+        setCollectStatusList({
+          ...collectStatusList,
+          [bookmarkId]: !isCollected,
+        });
+      }
+    } catch (error) {
+      console.error("책갈피 즐겨찾기 정보 업데이트에 실패하였습니다: ", error);
+    }
+  };
+
+  const handleExpansionButtonPress = (bookmarkId) => {
+    const isExpanded = cardExpasionStatusList[bookmarkId];
+    setCardExpasionStatusList({
+      ...cardExpasionStatusList,
+      [bookmarkId]: !isExpanded,
+    });
+  };
+
   const scrollToTop = () => {
     scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
   };
@@ -139,32 +212,15 @@ export default function Bookmark() {
         />
       )}
       <SearchBox
+        searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
         placeholder="찾는 책갈피가 있으신가요?"
       />
       <View style={styles.controllerContainer}>
-        <View style={styles.selectionContainer}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "MY" && styles.activeTab]}
-            onPress={() => handleTabSwitch("MY")}
-          >
-            <Text style={styles.tabText}>MY</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "pinned" && styles.activeTab]}
-            onPress={() => handleTabSwitch("pinned")}
-          >
-            <Image
-              source={
-                activeTab === "pinned"
-                  ? require("../../assets/images/button-uncollect.png")
-                  : require("../../assets/images/button-collect.png")
-              }
-              style={styles.pinButton}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
+        <ListSelectionTab
+          activeTab={activeTab}
+          handleTabSwitch={handleTabSwitch}
+        />
         <SortController
           sortOrder={sortOrder}
           handleSortToggle={handleSortToggle}
@@ -173,51 +229,29 @@ export default function Bookmark() {
       <View style={styles.cardContainer}>
         <ScrollView ref={scrollViewRef}>
           {(isSearching ? filteredBookmarkList : bookmarkList).map(
-            (bookmark, index) => (
-              <View key={index} style={styles.card}>
-                <TouchableOpacity
-                  onPress={() => handleBookmarkCardPress(bookmark._id)}
-                >
-                  <Text style={styles.dateString}>
-                    {transformTimeStamp(new Date(bookmark.createdAt))}
-                  </Text>
-                  {isSearching ? (
-                    <HighlightedContent
-                      text={bookmark.content}
-                      keyword={searchKeyword}
-                    />
-                  ) : (
-                    <Text style={styles.content} numberOfLines={5}>
-                      {bookmark.content}
-                    </Text>
-                  )}
-                  <View style={styles.cardBottomConntainer}>
-                    <View style={styles.hashtagContainer}>
-                      {bookmark.hashtags?.map((tag, index) => (
-                        <Text
-                          style={
-                            tag !== searchKeyword
-                              ? styles.hashtag
-                              : styles.highlightedHashtag
-                          }
-                          key={index}
-                        >
-                          #{tag}
-                        </Text>
-                      ))}
-                    </View>
-                    <View style={styles.deleteButtonContainer}>
-                      <TouchableOpacity
-                        style={styles.deleteButton}
-                        onPress={() => handleDeleteButtonPress(bookmark._id)}
-                      >
-                        <Text style={styles.deleteText}>삭제</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            ),
+            (bookmark, index) => {
+              return activeTab === "MY" ? (
+                <EditableCard
+                  key={index}
+                  bookmark={bookmark}
+                  isSearching={isSearching}
+                  searchKeyword={searchKeyword}
+                  handleBookmarkCardPress={handleBookmarkCardPress}
+                  handleDeleteButtonPress={handleDeleteButtonPress}
+                />
+              ) : (
+                <NonEditableCard
+                  key={index}
+                  bookmark={bookmark}
+                  isSearching={isSearching}
+                  searchKeyword={searchKeyword}
+                  collectStatusList={collectStatusList}
+                  cardExpasionStatusList={cardExpasionStatusList}
+                  handleCollectButtonPress={handleCollectButtonPress}
+                  handleExpansionButtonPress={handleExpansionButtonPress}
+                />
+              );
+            },
           )}
         </ScrollView>
       </View>
