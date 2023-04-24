@@ -20,11 +20,11 @@ export default function ExternalBookmark() {
   const [isSearching, setIsSearching] = useState(false);
   const [filteredBookmarkList, setFilteredBookmarkList] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
-  // const [cardPinnedStatusList, setCardPinnedStatusList] = useState({});
+  const [collectStatusList, setCollectStatusList] = useState({});
   const [cardExpasionStatusList, setCardExpasionStatusList] = useState({});
 
   useEffect(() => {
-    getAllMyBookmarks();
+    getAllAccessedBookmarks();
   }, [refresh]);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function ExternalBookmark() {
     }, []),
   );
 
-  const getAllMyBookmarks = async () => {
+  const getAllAccessedBookmarks = async () => {
     try {
       const url = `${API_URI}/api/bookmarks/creator?creatorId=${accessedUser.id}`;
       const response = await fetch(url, {
@@ -54,14 +54,41 @@ export default function ExternalBookmark() {
       const sortedBookmarkList = bookmarkList.reverse();
       setBookmarkList(sortedBookmarkList);
 
-      const cardExpansionStatus = sortedBookmarkList.reduce((acc, bookmark) => {
-        acc[bookmark._id] = false;
-        return acc;
-      }, {});
-      setCardExpasionStatusList(cardExpansionStatus);
+      updateCollectStatus(sortedBookmarkList);
+      updateCardExpansionStatus(sortedBookmarkList);
     } catch (error) {
       console.warn(error);
     }
+  };
+
+  const updateCollectStatus = (sortedBookmarkList) => {
+    const collectStatus = sortedBookmarkList.reduce(async (acc, bookmark) => {
+      try {
+        const url = `${API_URI}/api/collects/${accessedUser.id}/${bookmark._id}/exists`;
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const result = await response.json();
+        acc[bookmark._id] = result;
+      } catch (error) {
+        console.warn(error);
+      }
+
+      return acc;
+    }, {});
+
+    setCollectStatusList(collectStatus);
+  };
+
+  const updateCardExpansionStatus = (sortedBookmarkList) => {
+    const cardExpansionStatus = sortedBookmarkList.reduce((acc, bookmark) => {
+      acc[bookmark._id] = false;
+      return acc;
+    }, {});
+    setCardExpasionStatusList(cardExpansionStatus);
   };
 
   const handleSearch = () => {
@@ -120,9 +147,9 @@ export default function ExternalBookmark() {
                     {!isSearching && (
                       <Image
                         source={
-                          // cardExpasionStatusList[bookmark._id]
-                          require("../../assets/images/button-unpin.png")
-                          // : require("../../assets/images/button-pin.png")
+                          collectStatusList[bookmark._id]
+                            ? require("../../assets/images/button-unpin.png")
+                            : require("../../assets/images/button-pin.png")
                         }
                         style={styles.pinButton}
                         resizeMode="contain"

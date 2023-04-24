@@ -52,6 +52,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "black",
   },
+  pinButton: {
+    width: 25,
+    height: 25,
+  },
   cardContainer: {
     paddingTop: 5,
     paddingHorizontal: 5,

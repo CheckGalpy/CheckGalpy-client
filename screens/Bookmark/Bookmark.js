@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { REACT_APP_API_URI as API_URI } from "@env";
 
@@ -28,7 +28,7 @@ export default function Bookmark() {
   const [isSearching, setIsSearching] = useState(false);
   const [filteredBookmarkList, setFilteredBookmarkList] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [activeTab, setActiveTab] = useState("전체");
+  const [activeTab, setActiveTab] = useState("MY");
   const [sortOrder, setSortOrder] = useState("최신순");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [bookmarkIdToDelete, setBookmarkIdToDelete] = useState(null);
@@ -145,16 +145,24 @@ export default function Bookmark() {
       <View style={styles.controllerContainer}>
         <View style={styles.selectionContainer}>
           <TouchableOpacity
-            style={[styles.tab, activeTab === "전체" && styles.activeTab]}
-            onPress={() => handleTabSwitch("전체")}
+            style={[styles.tab, activeTab === "MY" && styles.activeTab]}
+            onPress={() => handleTabSwitch("MY")}
           >
-            <Text style={styles.tabText}>전체</Text>
+            <Text style={styles.tabText}>MY</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tab, activeTab === "좋아요" && styles.activeTab]}
-            onPress={() => handleTabSwitch("좋아요")}
+            style={[styles.tab, activeTab === "pinned" && styles.activeTab]}
+            onPress={() => handleTabSwitch("pinned")}
           >
-            <Text style={styles.tabText}>좋아요</Text>
+            <Image
+              source={
+                activeTab === "pinned"
+                  ? require("../../assets/images/button-unpin.png")
+                  : require("../../assets/images/button-pin.png")
+              }
+              style={styles.pinButton}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         </View>
         <SortController
