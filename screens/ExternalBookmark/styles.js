@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
-  pinButtonContainer: { flex: 1 },
-  pinButton: {
+  collectButtonContainer: { flex: 1 },
+  collectButton: {
     width: 30,
     height: 30,
   },

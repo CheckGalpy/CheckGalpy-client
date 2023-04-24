@@ -54,41 +54,32 @@ export default function ExternalBookmark() {
       const sortedBookmarkList = bookmarkList.reverse();
       setBookmarkList(sortedBookmarkList);
 
-      updateCollectStatus(sortedBookmarkList);
-      updateCardExpansionStatus(sortedBookmarkList);
+      const collectStatus = {};
+      for (const bookmark of sortedBookmarkList) {
+        try {
+          const url = `${API_URI}/api/collects/${accessedUser.id}/${bookmark._id}/exists`;
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const result = await response.json();
+          collectStatus[bookmark._id] = result.exists;
+        } catch (error) {
+          console.warn(error);
+        }
+      }
+      setCollectStatusList(collectStatus);
+
+      const cardExpansionStatus = sortedBookmarkList.reduce((acc, bookmark) => {
+        acc[bookmark._id] = false;
+        return acc;
+      }, {});
+      setCardExpasionStatusList(cardExpansionStatus);
     } catch (error) {
       console.warn(error);
     }
-  };
-
-  const updateCollectStatus = (sortedBookmarkList) => {
-    const collectStatus = sortedBookmarkList.reduce(async (acc, bookmark) => {
-      try {
-        const url = `${API_URI}/api/collects/${accessedUser.id}/${bookmark._id}/exists`;
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const result = await response.json();
-        acc[bookmark._id] = result;
-      } catch (error) {
-        console.warn(error);
-      }
-
-      return acc;
-    }, {});
-
-    setCollectStatusList(collectStatus);
-  };
-
-  const updateCardExpansionStatus = (sortedBookmarkList) => {
-    const cardExpansionStatus = sortedBookmarkList.reduce((acc, bookmark) => {
-      acc[bookmark._id] = false;
-      return acc;
-    }, {});
-    setCardExpasionStatusList(cardExpansionStatus);
   };
 
   const handleSearch = () => {
@@ -102,14 +93,34 @@ export default function ExternalBookmark() {
     scrollToTop();
   };
 
-  // const handlePinButtonPress = (bookmarkId) => {
-  //   const isPinned = cardExpasionStatusList[bookmarkId];
+  const handleCollectButtonPress = async (bookmarkId) => {
+    const isCollected = collectStatusList[bookmarkId];
 
-  //   setCardExpasionStatusList({
-  //     ...cardExpasionStatusList,
-  //     [bookmarkId]: !isExpanded,
-  //   });
-  // };
+    try {
+      const url = `${API_URI}/api/collects/${
+        isCollected ? "discard" : "collect"
+      }`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          collectorId: accessedUser.id,
+          collectedBookmarkId: bookmarkId,
+        }),
+      });
+
+      if (response.status === 201 || response.status === 200) {
+        setCollectStatusList({
+          ...collectStatusList,
+          [bookmarkId]: !isCollected,
+        });
+      }
+    } catch (error) {
+      console.error("책갈피 즐겨찾기 정보 업데이트에 실패하였습니다: ", error);
+    }
+  };
 
   const handleExpansionButtonPress = (bookmarkId) => {
     const isExpanded = cardExpasionStatusList[bookmarkId];
@@ -141,17 +152,17 @@ export default function ExternalBookmark() {
                     </Text>
                   </View>
                   <TouchableOpacity
-                    style={styles.pinButtonContainer}
-                    // onPress={() => handlePinButtonPress(bookmark._id)}
+                    style={styles.collectButtonContainer}
+                    onPress={() => handleCollectButtonPress(bookmark._id)}
                   >
                     {!isSearching && (
                       <Image
                         source={
                           collectStatusList[bookmark._id]
-                            ? require("../../assets/images/button-unpin.png")
-                            : require("../../assets/images/button-pin.png")
+                            ? require("../../assets/images/button-uncollect.png")
+                            : require("../../assets/images/button-collect.png")
                         }
-                        style={styles.pinButton}
+                        style={styles.collectButton}
                         resizeMode="contain"
                       />
                     )}

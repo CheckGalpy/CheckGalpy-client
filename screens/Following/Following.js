@@ -118,10 +118,6 @@ export default function Following() {
     }
   };
 
-  const scrollToTop = () => {
-    scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
-  };
-
   const handleUserCardPress = (
     targetUserId,
     targetUserFamilyName,
@@ -133,6 +129,10 @@ export default function Following() {
     };
     dispatch(setAccessedUser(accessedUser));
     navigate("ExternalBookmark");
+  };
+
+  const scrollToTop = () => {
+    scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
   };
 
   return (

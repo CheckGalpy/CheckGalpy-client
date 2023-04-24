@@ -157,8 +157,8 @@ export default function Bookmark() {
             <Image
               source={
                 activeTab === "pinned"
-                  ? require("../../assets/images/button-unpin.png")
-                  : require("../../assets/images/button-pin.png")
+                  ? require("../../assets/images/button-uncollect.png")
+                  : require("../../assets/images/button-collect.png")
               }
               style={styles.pinButton}
               resizeMode="contain"
