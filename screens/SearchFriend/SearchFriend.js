@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { REACT_APP_API_URI as API_URI } from "@env";
+import { useNavigation } from "@react-navigation/native";
 
+import { setAccessedUser } from "../../redux/accessedUserSlice";
 import styles from "./styles";
 
 import SearchBox from "../../components/SearchBox.js/SearchBox";
 
 export default function SearchFriend() {
+  const { navigate } = useNavigation();
+
+  const dispatch = useDispatch();
   const currentUserId = useSelector(
     (state) => state.currentUserId.currentUserId,
   );
@@ -74,6 +79,19 @@ export default function SearchFriend() {
     }
   };
 
+  const handleUserCardPress = (
+    targetUserId,
+    targetUserFamilyName,
+    targetUseGivenName,
+  ) => {
+    const accessedUser = {
+      id: targetUserId,
+      name: targetUserFamilyName + targetUseGivenName,
+    };
+    dispatch(setAccessedUser(accessedUser));
+    navigate("ExternalBookmark");
+  };
+
   return (
     <View style={styles.container}>
       <SearchBox
@@ -84,7 +102,16 @@ export default function SearchFriend() {
         <ScrollView>
           {targetUserList.map((targetUser, index) => (
             <View key={index} style={styles.card}>
-              <TouchableOpacity style={styles.profileContainer}>
+              <TouchableOpacity
+                style={styles.profileContainer}
+                onPress={() =>
+                  handleUserCardPress(
+                    targetUser._id,
+                    targetUser.familyName,
+                    targetUser.givenName,
+                  )
+                }
+              >
                 <View style={styles.avatarContainer}>
                   <Image
                     style={styles.avatar}
@@ -100,9 +127,11 @@ export default function SearchFriend() {
                 </View>
               </TouchableOpacity>
               <View style={styles.followingButtonContainer}>
-                <TouchableOpacity style={styles.followingingButtonContainer}>
+                <TouchableOpacity
+                  style={styles.followingingButtonContainer}
+                  onPress={() => handleFollowingButtonPress(targetUser._id)}
+                >
                   <Image
-                    onPress={() => handleFollowingButtonPress(targetUser._id)}
                     source={
                       followingStatusList[targetUser._id]
                         ? require("../../assets/images/button-unfollow.png")

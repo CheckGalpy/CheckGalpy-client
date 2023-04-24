@@ -8,54 +8,10 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: "#fff",
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderTopColor: "#e1e1e1",
-    borderBottomColor: "#e1e1e1",
-  },
-  lenseIcon: {
-    width: 35,
-    height: 35,
-    marginLeft: 10,
-  },
-  searchInput: {
-    flex: 1,
-    height: 50,
-    paddingHorizontal: 16,
-  },
-  controllerContainer: {
-    flexDirection: "row",
-    height: 50,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e1e1e1",
-  },
-  selectionContainer: {
-    flex: 4,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingLeft: 10,
-  },
-  tab: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderTopLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  activeTab: {
-    backgroundColor: PRIMARY_YELLOW,
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "black",
-  },
   cardContainer: {
     paddingTop: 5,
     paddingHorizontal: 5,
-    paddingBottom: 105,
+    paddingBottom: 60,
   },
   card: {
     backgroundColor: "#fff",
@@ -71,10 +27,17 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 6,
   },
+  headerConatainer: { flexDirection: "row" },
+  titleContainer: { flex: 9 },
   dateString: {
     marginBottom: 20,
     fontSize: 14,
     fontWeight: "600",
+  },
+  pinButtonContainer: { flex: 1 },
+  pinButton: {
+    width: 30,
+    height: 30,
   },
   content: {
     marginBottom: 20,
@@ -82,7 +45,7 @@ const styles = StyleSheet.create({
   },
   cardBottomConntainer: { flexDirection: "row" },
   hashtagContainer: {
-    flex: 7,
+    flex: 9,
     flexDirection: "row",
     flexWrap: "wrap",
   },
@@ -102,15 +65,14 @@ const styles = StyleSheet.create({
     backgroundColor: PRIMARY_YELLOW,
     fontSize: 12,
   },
-  deleteButtonContainer: {
+  expandButtonContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
   },
-  deleteText: {
-    color: "gray",
-    fontSize: 10,
+  expandButton: {
+    width: 30,
+    height: 30,
   },
 });
 

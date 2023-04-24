@@ -6,12 +6,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    padding: 10,
   },
   card: {
-    marginTop: 20,
-    marginRight: 10,
-    marginBottom: 10,
-    marginLeft: 10,
+    margin: 10,
     borderRadius: 10,
     padding: 20,
     backgroundColor: "#fff",

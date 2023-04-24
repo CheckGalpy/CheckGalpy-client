@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { REACT_APP_API_URI as API_URI } from "@env";
 
+import { setAccessedUser } from "../../redux/accessedUserSlice";
 import styles from "./styles";
 
 import SearchBox from "../../components/SearchBox.js/SearchBox";
 import SortController from "../../components/SortController/SortController";
 
 export default function Following() {
+  const { navigate } = useNavigation();
+
+  const dispatch = useDispatch();
   const currentUserId = useSelector(
     (state) => state.currentUserId.currentUserId,
   );
@@ -61,7 +65,6 @@ export default function Following() {
         acc[user._id] = true;
         return acc;
       }, {});
-
       setFollowingStatusList(followingStatus);
     } catch (error) {
       console.error("팔로잉 정보를 가져오는데 실패하였습니다: ", error);
@@ -119,6 +122,19 @@ export default function Following() {
     scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
   };
 
+  const handleUserCardPress = (
+    targetUserId,
+    targetUserFamilyName,
+    targetUseGivenName,
+  ) => {
+    const accessedUser = {
+      id: targetUserId,
+      name: targetUserFamilyName + targetUseGivenName,
+    };
+    dispatch(setAccessedUser(accessedUser));
+    navigate("ExternalBookmark");
+  };
+
   return (
     <View style={styles.container}>
       <SearchBox
@@ -143,7 +159,13 @@ export default function Following() {
               <View key={index} style={styles.card}>
                 <TouchableOpacity
                   style={styles.profileContainer}
-                  // onPress={() => handleFollowCardPress(targetUser._id)}
+                  onPress={() =>
+                    handleUserCardPress(
+                      targetUser._id,
+                      targetUser.familyName,
+                      targetUser.givenName,
+                    )
+                  }
                 >
                   <View style={styles.avatarContainer}>
                     <Image
@@ -160,9 +182,11 @@ export default function Following() {
                   </View>
                 </TouchableOpacity>
                 <View style={styles.followingButtonContainer}>
-                  <TouchableOpacity style={styles.followingingButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.followingingButtonContainer}
+                    onPress={() => handleFollowingButtonPress(targetUser._id)}
+                  >
                     <Image
-                      onPress={() => handleFollowingButtonPress(targetUser._id)}
                       source={
                         followingStatusList[targetUser._id]
                           ? require("../../assets/images/button-unfollow.png")

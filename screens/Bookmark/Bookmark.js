@@ -179,7 +179,7 @@ export default function Bookmark() {
                       keyword={searchKeyword}
                     />
                   ) : (
-                    <Text style={styles.content} numberOfLines={7}>
+                    <Text style={styles.content} numberOfLines={5}>
                       {bookmark.content}
                     </Text>
                   )}

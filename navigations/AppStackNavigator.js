@@ -12,10 +12,12 @@ import ScanEdit from "../screens/ScanEdit/ScanEdit";
 import BookmarkDetail from "../screens/BookmarkDetail/BookmarkDetail";
 import Scan from "../screens/Scan/Scan";
 import SearchFriend from "../screens/SearchFriend/SearchFriend";
+import ExternalBookmark from "../screens/ExternalBookmark/ExternalBookmark";
 
 export default function AppStackNavigator() {
   const Stack = createStackNavigator();
   const authStatus = useSelector((state) => state.authStatus.authStatus);
+  const accessedUser = useSelector((state) => state.accessedUser.accessedUser);
 
   useTokenVerification();
 
@@ -61,6 +63,17 @@ export default function AppStackNavigator() {
             component={SearchFriend}
             options={{
               header: () => <TitleHeader screenInfo={{ title: "친구찾기" }} />,
+            }}
+          />
+          <Stack.Screen
+            name="ExternalBookmark"
+            component={ExternalBookmark}
+            options={{
+              header: () => (
+                <TitleHeader
+                  screenInfo={{ title: accessedUser.name + "님의 책갈피" }}
+                />
+              ),
             }}
           />
         </>
