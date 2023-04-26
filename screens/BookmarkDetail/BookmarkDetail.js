@@ -48,7 +48,12 @@ export default function BookmarkDetail() {
   };
 
   const handleHashtagAdd = () => {
-    setHashtags([...hashtags, "태그를 입력하세요"]);
+    if (
+      hashtags.length === 0 ||
+      hashtags[hashtags.length - 1] !== "태그를 입력하세요"
+    ) {
+      setHashtags([...hashtags, "태그를 입력하세요"]);
+    }
   };
 
   const handleHashtagChange = (index, newText) => {
@@ -76,6 +81,12 @@ export default function BookmarkDetail() {
     }
   };
 
+  const handleHashtagDelete = (index) => {
+    const newTags = [...hashtags];
+    newTags.splice(index, 1);
+    setHashtags(newTags);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -98,6 +109,7 @@ export default function BookmarkDetail() {
                 tag={tag}
                 index={index}
                 onTagChange={handleHashtagChange}
+                onTagDelete={handleHashtagDelete}
               />
             ))}
           </View>

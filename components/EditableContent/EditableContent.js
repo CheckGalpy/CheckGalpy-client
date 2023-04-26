@@ -27,6 +27,8 @@ export default function EditableContent({ content, onContentChange }) {
           onChangeText={handleContentChange}
           onBlur={handleBlur}
           autoFocus
+          multiline
+          style={styles.content}
         />
       ) : (
         <TouchableOpacity onPress={handlePress}>

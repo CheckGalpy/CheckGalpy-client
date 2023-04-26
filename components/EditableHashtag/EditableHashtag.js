@@ -4,8 +4,14 @@ import PropTypes from "prop-types";
 
 import styles from "./styles";
 
-export default function EditableHashtag({ tag, index, onTagChange }) {
+export default function EditableHashtag({
+  tag,
+  index,
+  onTagChange,
+  onTagDelete,
+}) {
   const [editing, setEditing] = useState(false);
+  const [initialEdit, setInitialEdit] = useState(true);
 
   const handlePress = () => {
     setEditing(true);
@@ -16,7 +22,13 @@ export default function EditableHashtag({ tag, index, onTagChange }) {
   };
 
   const handleTextChange = (newText) => {
-    onTagChange(index, newText);
+    setInitialEdit(false);
+
+    if (newText === "") {
+      onTagDelete(index);
+    } else {
+      onTagChange(index, newText);
+    }
   };
 
   return (
@@ -24,7 +36,7 @@ export default function EditableHashtag({ tag, index, onTagChange }) {
       {editing ? (
         <TextInput
           style={styles.editableHashtag}
-          value={tag}
+          value={initialEdit ? "" : tag}
           onChangeText={handleTextChange}
           onBlur={handleBlur}
           autoFocus
@@ -42,4 +54,5 @@ EditableHashtag.propTypes = {
   tag: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   onTagChange: PropTypes.func.isRequired,
+  onTagDelete: PropTypes.func.isRequired,
 };
