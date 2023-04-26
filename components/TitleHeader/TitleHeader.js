@@ -22,13 +22,15 @@ export default function TitleHeader({ screenInfo }) {
         <Text style={styles.screenTitle}>{screenInfo.title}</Text>
       </View>
       <View style={styles.containerRight}>
-        <TouchableOpacity onPress={() => navigate(screenInfo.next)}>
-          <Image
-            source={screenInfo.imageSource}
-            style={styles.addButton}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+        {screenInfo.imageSource && (
+          <TouchableOpacity onPress={() => navigate(screenInfo.next)}>
+            <Image
+              source={screenInfo.imageSource}
+              style={styles.addButton}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

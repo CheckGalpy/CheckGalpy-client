@@ -10,7 +10,7 @@ import Login from "../screens/Login/Login";
 import Album from "../screens/Album/Album";
 import ScanEdit from "../screens/ScanEdit/ScanEdit";
 import BookmarkDetail from "../screens/BookmarkDetail/BookmarkDetail";
-import Scan from "../screens/Scan/Scan";
+
 import SearchFriend from "../screens/SearchFriend/SearchFriend";
 import ExternalBookmark from "../screens/ExternalBookmark/ExternalBookmark";
 import BookmarkDetailReadOnly from "../screens/BookmarkDetailReadOnly/BookmarkDetailReadOnly";
@@ -34,13 +34,6 @@ export default function AppStackNavigator() {
           <Stack.Screen
             name="Album"
             component={Album}
-            options={{
-              header: () => <LogoHeader />,
-            }}
-          />
-          <Stack.Screen
-            name="Scan"
-            component={Scan}
             options={{
               header: () => <LogoHeader />,
             }}

@@ -102,10 +102,13 @@ export default function ScanEdit() {
             </TouchableOpacity>
           </View>
           <View style={styles.controlAreaCenter}>
-            <TouchableOpacity
-              style={styles.shootButton}
-              onPress={handleRescan}
-            />
+            <TouchableOpacity onPress={handleRescan}>
+              <Image
+                source={require("../../assets/images/button-rescan.png")}
+                style={styles.confirmButton}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.controlAreaRight}>
             <TouchableOpacity onPress={handleTextExtraction}>
