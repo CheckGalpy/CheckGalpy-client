@@ -13,6 +13,7 @@ import BookmarkDetail from "../screens/BookmarkDetail/BookmarkDetail";
 import Scan from "../screens/Scan/Scan";
 import SearchFriend from "../screens/SearchFriend/SearchFriend";
 import ExternalBookmark from "../screens/ExternalBookmark/ExternalBookmark";
+import BookmarkDetailReadOnly from "../screens/BookmarkDetailReadOnly/BookmarkDetailReadOnly";
 
 export default function AppStackNavigator() {
   const Stack = createStackNavigator();
@@ -68,6 +69,17 @@ export default function AppStackNavigator() {
           <Stack.Screen
             name="ExternalBookmark"
             component={ExternalBookmark}
+            options={{
+              header: () => (
+                <TitleHeader
+                  screenInfo={{ title: accessedUser.name + "님의 책갈피" }}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="BookmarkDetailReadOnly"
+            component={BookmarkDetailReadOnly}
             options={{
               header: () => (
                 <TitleHeader
