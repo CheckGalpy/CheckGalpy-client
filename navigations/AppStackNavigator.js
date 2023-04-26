@@ -7,7 +7,6 @@ import LogoHeader from "../components/LogoHeader/LogoHeader";
 import TitleHeader from "../components/TitleHeader/TitleHeader";
 
 import Login from "../screens/Login/Login";
-import Album from "../screens/Album/Album";
 import ScanEdit from "../screens/ScanEdit/ScanEdit";
 import BookmarkDetail from "../screens/BookmarkDetail/BookmarkDetail";
 
@@ -30,13 +29,6 @@ export default function AppStackNavigator() {
             name="MainTabNavigator"
             component={MainTabNavigator}
             options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Album"
-            component={Album}
-            options={{
-              header: () => <LogoHeader />,
-            }}
           />
           <Stack.Screen
             name="ScanEdit"

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { View, TouchableOpacity, Text, Image } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
@@ -59,16 +59,7 @@ export default function Scan() {
           />
         )}
         <View style={styles.controlArea}>
-          <View style={styles.controlAreaLeft}>
-            <TouchableOpacity onPress={() => navigate("Album")}>
-              <Image
-                source={require("../../assets/images/thumbnail-album.png")}
-                style={styles.albumThumbnail}
-                resizeMode="contain"
-              />
-              <Text style={styles.text}>앨범에서 선택</Text>
-            </TouchableOpacity>
-          </View>
+          <View style={styles.controlAreaLeft} />
           <View style={styles.controlAreaCenter}>
             <TouchableOpacity style={styles.shootButton} onPress={handleScan} />
           </View>

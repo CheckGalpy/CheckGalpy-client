@@ -89,6 +89,7 @@ export default function MainTabNavigator() {
               }}
             />
           ),
+          tabBarStyle: { display: "none" },
         }}
       />
       <MainTab.Screen

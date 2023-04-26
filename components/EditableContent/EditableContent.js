@@ -38,7 +38,7 @@ export default function EditableContent({ content, onContentChange }) {
   const onPinchEvent = ({ nativeEvent }) => {
     if (nativeEvent.scale < 0.99) {
       removeLineBreaks();
-      console.warn("핀치 모션이 감지되었습니다. 여백을 삭제를 진행합니다.");
+      console.warn("핀치모션 감지. 여백 삭제를 진행합니다.");
     }
   };
 
