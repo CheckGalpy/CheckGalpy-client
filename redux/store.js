@@ -6,6 +6,7 @@ import currentBookmarkIdSlice from "./currentBookmarkIdSlice";
 import accessedUserSlice from "./accessedUserSlice";
 import scannedImageSlice from "./scannedImageSlice";
 import scannedTextSlice from "./scannedTextSlice";
+import bookmarkTabStatusSlice from "./bookmarkTabStatusSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     accessedUser: accessedUserSlice,
     scannedImage: scannedImageSlice,
     scannedText: scannedTextSlice,
+    bookmarkTabStatus: bookmarkTabStatusSlice,
   },
 });
 

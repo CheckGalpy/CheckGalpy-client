@@ -5,6 +5,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { REACT_APP_API_URI as API_URI } from "@env";
 
 import { setCurrentBookmarkId } from "../../redux/currentBookmarkIdSlice";
+import { setBookmarkTabStatus } from "../../redux/bookmarkTabStatusSlice";
 import styles from "./styles";
 
 import ListSelectionTab from "../../components/ListSelectionTab/ListSelectionTab";
@@ -21,6 +22,9 @@ export default function Bookmark() {
   const currentUserId = useSelector(
     (state) => state.currentUserId.currentUserId,
   );
+  const bookmarkTabStatus = useSelector(
+    (state) => state.bookmarkTabStatus.bookmarkTabStatus,
+  );
 
   const scrollViewRef = useRef();
 
@@ -29,7 +33,6 @@ export default function Bookmark() {
   const [filteredBookmarkList, setFilteredBookmarkList] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [activeTab, setActiveTab] = useState("MY");
   const [sortOrder, setSortOrder] = useState("최신순");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [bookmarkIdToDelete, setBookmarkIdToDelete] = useState(null);
@@ -38,7 +41,7 @@ export default function Bookmark() {
 
   useEffect(() => {
     getAllMyBookmarks();
-  }, [activeTab]);
+  }, [bookmarkTabStatus]);
 
   useEffect(() => {
     getAllMyBookmarks();
@@ -59,7 +62,7 @@ export default function Bookmark() {
   );
 
   const getAllMyBookmarks = async () => {
-    if (activeTab === "MY") {
+    if (bookmarkTabStatus === "MY") {
       try {
         const url = `${API_URI}/api/bookmarks/creator?creatorId=${currentUserId}`;
         const response = await fetch(url, {
@@ -73,7 +76,7 @@ export default function Bookmark() {
       } catch (error) {
         console.warn(error);
       }
-    } else if (activeTab === "collected") {
+    } else if (bookmarkTabStatus === "collected") {
       try {
         const url = `${API_URI}/api/collects/${currentUserId}/collected`;
         const response = await fetch(url, {
@@ -118,7 +121,7 @@ export default function Bookmark() {
   };
 
   const handleTabSwitch = (tab) => {
-    setActiveTab(tab);
+    dispatch(setBookmarkTabStatus(tab));
     setSearchKeyword("");
     setIsSearching(false);
     scrollToTop();
@@ -217,10 +220,7 @@ export default function Bookmark() {
         placeholder="찾는 책갈피가 있으신가요?"
       />
       <View style={styles.controllerContainer}>
-        <ListSelectionTab
-          activeTab={activeTab}
-          handleTabSwitch={handleTabSwitch}
-        />
+        <ListSelectionTab handleTabSwitch={handleTabSwitch} />
         <SortController
           sortOrder={sortOrder}
           handleSortToggle={handleSortToggle}
@@ -230,7 +230,7 @@ export default function Bookmark() {
         <ScrollView ref={scrollViewRef}>
           {(isSearching ? filteredBookmarkList : bookmarkList).map(
             (bookmark, index) => {
-              return activeTab === "MY" ? (
+              return bookmarkTabStatus === "MY" ? (
                 <EditableCard
                   key={index}
                   bookmark={bookmark}

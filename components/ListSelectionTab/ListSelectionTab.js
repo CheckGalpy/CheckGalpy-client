@@ -1,24 +1,32 @@
+import { useSelector } from "react-redux";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import PropTypes from "prop-types";
 
 import styles from "./styles";
 
-export default function ListSelectionTab({ activeTab, handleTabSwitch }) {
+export default function ListSelectionTab({ handleTabSwitch }) {
+  const bookmarkTabStatus = useSelector(
+    (state) => state.bookmarkTabStatus.bookmarkTabStatus,
+  );
+
   return (
     <View style={styles.selectionContainer}>
       <TouchableOpacity
-        style={[styles.tab, activeTab === "MY" && styles.activeTab]}
+        style={[styles.tab, bookmarkTabStatus === "MY" && styles.activeTab]}
         onPress={() => handleTabSwitch("MY")}
       >
         <Text style={styles.tabText}>MY</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.tab, activeTab === "collected" && styles.activeTab]}
+        style={[
+          styles.tab,
+          bookmarkTabStatus === "collected" && styles.activeTab,
+        ]}
         onPress={() => handleTabSwitch("collected")}
       >
         <Image
           source={
-            activeTab === "collected"
+            bookmarkTabStatus === "collected"
               ? require("../../assets/images/button-uncollect.png")
               : require("../../assets/images/button-collect.png")
           }
@@ -31,6 +39,5 @@ export default function ListSelectionTab({ activeTab, handleTabSwitch }) {
 }
 
 ListSelectionTab.propTypes = {
-  activeTab: PropTypes.string.isRequired,
   handleTabSwitch: PropTypes.func.isRequired,
 };
