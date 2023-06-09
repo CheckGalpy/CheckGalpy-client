@@ -277,7 +277,52 @@ const handleConsecutiveScan = async () => {
 
 <br>
 
-Galpy를 사용하는 사용자의 특성을 고려할 때, 생성하는 책갈피의 길이가 다 다르고 나타나는 단어의 빈도수에 따라 관심도가 구분되어야 한다고 생각했습니다. 따라서 최종적으로는 **코사인 유사도** 방식을 사용하여 사용자들의 관심사 유사도를 측정하기로 최종 결정하였습니다.
+Galpy를 사용하는 사용자의 특성을 고려할 때, 생성하는 책갈피의 길이가 다 다르고 나타나는 단어의 빈도수에 따라 관심도가 구분되어야 한다고 생각했습니다. 따라서 최종적으로는 **코사인 유사도** 방식을 사용하여 사용자들의 관심사 유사도를 측정하기로 최종 결정하였습니다. 코사인 유사도 방식을 사용하여 사용자의 관심사 유사도를 비교하는 로직은 다음과 같습니다:
+
+```javascript
+// updateSimilarity.js
+
+async function calculateUsersSimilarity(userId1, userId2) {
+  const user1HashtagsFrequency = await getUserHashtagsFrequency(userId1);
+  const user2HashtagsFrequency = await getUserHashtagsFrequency(userId2);
+
+  const similarity = cosineSimilarity(
+    user1HashtagsFrequency,
+    user2HashtagsFrequency,
+  );
+
+  return similarity;
+}
+
+function cosineSimilarity(vectorA, vectorB) {
+  const dotProductAB = dotProduct(vectorA, vectorB);
+  const magnitudeA = magnitude(vectorA);
+  const magnitudeB = magnitude(vectorB);
+
+  if (magnitudeA === 0 || magnitudeB === 0) {
+    return 0;
+  }
+
+  return dotProductAB / (magnitudeA * magnitudeB);
+}
+
+const dotProduct = (vectorA, vectorB) => {
+  return Object.keys(vectorA).reduce((sum, key) => {
+    if (key in vectorB) {
+      return sum + vectorA[key] * vectorB[key];
+    }
+    return sum;
+  }, 0);
+};
+
+const magnitude = (vector) => {
+  return Math.sqrt(
+    Object.values(vector).reduce((sum, val) => {
+      return sum + Math.pow(val, 2);
+    }, 0),
+  );
+};
+```
 
 <br>
 
@@ -289,8 +334,16 @@ Galpy를 사용하는 사용자의 특성을 고려할 때, 생성하는 책갈�
   - 유저 100명: 유사도 연산 4,950번 
   - 유저 1000명: 유사도 연산 약 50만번
 
-유저가 늘어남에 따라 연산해야하는 수가 기하급수적으로 늘어났으며, 사용자가 메인화면에서 책갈피를 추천받을 때마다 이러한 연산이 일어난다면 UX를 심각하게 해칠 수 있다고 판단하였습니다.
+유저가 늘어남에 따라 연산해야하는 수가 기하급수적으로 늘어났으며, 사용자가 메인화면에서 책갈피를 추천받을 때마다 이러한 연산이 일어난다면 UX를 심각하게 해칠 수 있다고 판단하였습니다. 따라서 1일 1회, 트래픽이 가장 적을 것으로 예상되는 시간 (새벽 4시)에 사전 연산을 진행하기로 결정하였으며, `node-cron` 라이브러리를 사용하여 서버에서 사전연산을 진행하고 DB에 유사 유저 목록을 업데이트 하는 방식을 선택하였습니다.
 
+```javascript
+// updateSimilarity.js
+
+function startCronJob() {
+  cron.schedule("0 0 4 * * *", updateSimilarityScores);
+  updateSimilarityScores();
+}
+```
 
 <br>
 
